@@ -33,7 +33,6 @@ import com.example.simplerick.components.common.DataPoint
 import com.example.simplerick.components.common.DataPointComponent
 import com.example.simplerick.components.common.LoadingState
 import com.example.simplerick.ui.theme.RickAction
-import kotlinx.coroutines.delay
 
 @Composable
 fun CharacterDetailsScreen(
@@ -45,7 +44,7 @@ fun CharacterDetailsScreen(
     var character by remember { mutableStateOf<Character?>(null) }
 
     LaunchedEffect(key1 = Unit, block = {
-        delay(2000)
+//        delay(2000)
         ktorClient.getCharacter(characterId).onSuccess {
             character = it
 
