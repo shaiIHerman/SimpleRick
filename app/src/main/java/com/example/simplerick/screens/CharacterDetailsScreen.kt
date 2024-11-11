@@ -36,7 +36,11 @@ import com.example.simplerick.ui.theme.RickAction
 import kotlinx.coroutines.delay
 
 @Composable
-fun CharacterDetailsScreen(ktorClient: KtorClient, characterId: Int) {
+fun CharacterDetailsScreen(
+    ktorClient: KtorClient,
+    characterId: Int,
+    onEpisodeClicked: (Int) -> Unit
+) {
 
     var character by remember { mutableStateOf<Character?>(null) }
 
@@ -116,7 +120,7 @@ fun CharacterDetailsScreen(ktorClient: KtorClient, characterId: Int) {
                     )
                     .clip(RoundedCornerShape(12.dp))
                     .clickable {
-//                        onEpisodeClicked(characterId)
+                        onEpisodeClicked(characterId)
                     }
                     .padding(vertical = 8.dp)
                     .fillMaxWidth()
