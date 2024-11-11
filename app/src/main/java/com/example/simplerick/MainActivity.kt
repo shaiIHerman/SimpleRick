@@ -16,12 +16,13 @@ import com.example.simplerick.screens.CharacterDetailsScreen
 import com.example.simplerick.screens.CharacterEpisodeScreen
 import com.example.simplerick.ui.theme.RickPrimary
 import com.example.simplerick.ui.theme.SimpleRickTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val ktorClient = KtorClient()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
             SimpleRickTheme {
@@ -30,10 +31,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     NavHost(navController = navController, startDestination = "character_details") {
                         composable("character_details") {
-                            CharacterDetailsScreen(
-                                ktorClient = ktorClient,
-                                characterId = 4
-                            ) {
+                            CharacterDetailsScreen(characterId = 4) {
                                 navController.navigate("character_episodes/$it")
                             }
                         }
