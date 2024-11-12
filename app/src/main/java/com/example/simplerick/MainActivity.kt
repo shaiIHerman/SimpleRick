@@ -14,6 +14,7 @@ import androidx.navigation.navArgument
 import com.example.network.KtorClient
 import com.example.simplerick.screens.CharacterDetailsScreen
 import com.example.simplerick.screens.CharacterEpisodeScreen
+import com.example.simplerick.screens.HomeScreen
 import com.example.simplerick.ui.theme.RickPrimary
 import com.example.simplerick.ui.theme.SimpleRickTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,7 +30,12 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = RickPrimary
                 ) {
-                    NavHost(navController = navController, startDestination = "character_details") {
+                    NavHost(navController = navController, startDestination = "home_screen") {
+                        composable("home_screen") {
+                            HomeScreen(onCharacterSelected = {
+                                //todo navigate
+                            })
+                        }
                         composable("character_details") {
                             CharacterDetailsScreen(characterId = 4) {
                                 navController.navigate("character_episodes/$it")

@@ -60,8 +60,7 @@ fun CharacterEpisodeScreen(characterId: Int, ktorClient: KtorClient) {
 
     characterState?.let { character ->
         MainScreen(
-            character = character,
-            episodes = episodesState!!
+            character = character, episodes = episodesState!!
         )
     } ?: LoadingState()
 }
@@ -81,8 +80,7 @@ private fun MainScreen(character: Character, episodes: List<Episode>) {
                     item {
                         DataPointComponent(
                             dataPoint = DataPoint(
-                                title = title,
-                                description = description
+                                title = title, description = description
                             )
                         )
                         Spacer(modifier = Modifier.width(32.dp))
