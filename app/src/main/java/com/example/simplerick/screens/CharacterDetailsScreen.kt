@@ -2,6 +2,7 @@ package com.example.simplerick.screens
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -29,6 +30,7 @@ import com.example.simplerick.components.character.CharacterDetailsNamePlateComp
 import com.example.simplerick.components.common.DataPoint
 import com.example.simplerick.components.common.DataPointComponent
 import com.example.simplerick.components.common.LoadingState
+import com.example.simplerick.components.common.SimpleToolbar
 import com.example.simplerick.ui.theme.RickAction
 import com.example.simplerick.viewmodels.CharacterDetailsViewModel
 
@@ -43,7 +45,8 @@ sealed interface CharacterDetailsViewState {
 fun CharacterDetailsScreen(
     characterId: Int,
     viewModel: CharacterDetailsViewModel = hiltViewModel(),
-    onEpisodeClicked: (Int) -> Unit
+    onEpisodeClicked: (Int) -> Unit,
+    onBackClicked: () -> Unit,
 ) {
 
     LaunchedEffect(key1 = Unit, block = {
@@ -52,75 +55,73 @@ fun CharacterDetailsScreen(
 
     val state by viewModel.stateFlow.collectAsState()
 
-    LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(all = 16.dp)) {
-        when (val viewState = state) {
-            CharacterDetailsViewState.Loading -> item { LoadingState() }
-            is CharacterDetailsViewState.Error -> {//todo
-            }
-
-            is CharacterDetailsViewState.Success -> {
-
-
-                // Name plate
-                item {
-                    CharacterDetailsNamePlateComponent(
-                        name = viewState.character.name,
-                        status = viewState.character.status
-                    )
+    Column {
+        SimpleToolbar(title = "Character details", onBackAction = onBackClicked)
+        LazyColumn(modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(all = 16.dp)) {
+            when (val viewState = state) {
+                CharacterDetailsViewState.Loading -> item { LoadingState() }
+                is CharacterDetailsViewState.Error -> {//todo
                 }
 
-                item { Spacer(modifier = Modifier.height(8.dp)) }
+                is CharacterDetailsViewState.Success -> {
+                    // Name plate
+                    item {
+                        CharacterDetailsNamePlateComponent(
+                            name = viewState.character.name,
+                            status = viewState.character.status
+                        )
+                    }
 
-                // Image
-                item {
-                    SubcomposeAsyncImage(
-                        model = viewState.character.imageUrl,
-                        contentDescription = "Character Image",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(1f)
-                            .clip(
-                                RoundedCornerShape(12.dp)
-                            ),
-                        loading = { LoadingState() },
-                    )
+                    item { Spacer(modifier = Modifier.height(8.dp)) }
+
+                    // Image
+                    item {
+                        SubcomposeAsyncImage(
+                            model = viewState.character.imageUrl,
+                            contentDescription = "Character Image",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .aspectRatio(1f)
+                                .clip(
+                                    RoundedCornerShape(12.dp)
+                                ),
+                            loading = { LoadingState() },
+                        )
+                    }
+
+                    // Data points
+                    items(viewState.characterDataPoints) {
+                        Spacer(modifier = Modifier.height(32.dp))
+                        DataPointComponent(dataPoint = it)
+                    }
+
+                    item { Spacer(modifier = Modifier.height(32.dp)) }
+                    // Button
+                    item {
+                        Text(
+                            text = "View all episodes",
+                            color = RickAction,
+                            fontSize = 18.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .padding(horizontal = 32.dp)
+                                .border(
+                                    width = 1.dp,
+                                    color = RickAction,
+                                    shape = RoundedCornerShape(12.dp)
+                                )
+                                .clip(RoundedCornerShape(12.dp))
+                                .clickable {
+                                    onEpisodeClicked(characterId)
+                                }
+                                .padding(vertical = 8.dp)
+                                .fillMaxWidth()
+                        )
+                    }
+
+                    item { Spacer(modifier = Modifier.height(64.dp)) }
                 }
-
-                // Data points
-                items(viewState.characterDataPoints) {
-                    Spacer(modifier = Modifier.height(32.dp))
-                    DataPointComponent(dataPoint = it)
-                }
-
-                item { Spacer(modifier = Modifier.height(32.dp)) }
-                // Button
-                item {
-                    Text(
-                        text = "View all episodes",
-                        color = RickAction,
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .padding(horizontal = 32.dp)
-                            .border(
-                                width = 1.dp,
-                                color = RickAction,
-                                shape = RoundedCornerShape(12.dp)
-                            )
-                            .clip(RoundedCornerShape(12.dp))
-                            .clickable {
-                                onEpisodeClicked(characterId)
-                            }
-                            .padding(vertical = 8.dp)
-                            .fillMaxWidth()
-                    )
-                }
-
-                item { Spacer(modifier = Modifier.height(64.dp)) }
             }
         }
-
-
     }
-
 }
