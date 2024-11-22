@@ -73,5 +73,7 @@ fun HomeScreen(
                     })
             }
         }
+
+        else -> {}
     }
 }

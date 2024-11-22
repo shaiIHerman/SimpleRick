@@ -161,7 +161,9 @@ class MainActivity : ComponentActivity() {
                 }
             }
             composable(route = NavDestination.Search.route) {
-                SearchScreen()
+                SearchScreen { characterId ->
+                    navController.navigate("character_details/$characterId")
+                }
             }
         }
     }
